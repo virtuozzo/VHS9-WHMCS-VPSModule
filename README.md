@@ -1,6 +1,6 @@
-# OnApp WHMCS VPS Module Guide
+# Virtuozzo Hybrid Server 9 WHMCS VPS Module Guide
 
-The WHMCS VPS module works with the WHMCS module to maintain synchronization between virtual servers created by users in OnApp (not in the WHMCS module) and products created in WHMCS. This enables you to map/unmap those virtual machines and perform billing operations and general management tasks for them using the OnApp WHMCS module. It also offers an automated way of building virtual servers after the initial purchase. The product can be set to automatically build based on the setting on the products page. There are a few different options for building at certain times in the billing process.
+The WHMCS VPS module works with the WHMCS module to maintain synchronization between virtual servers created by users in Virtuozzo Hybrid Server 9 (not in the WHMCS module) and products created in WHMCS. This enables you to map/unmap those virtual machines and perform billing operations and general management tasks for them using the Virtuozzo Hybrid Server 9 WHMCS module. It also offers an automated way of building virtual servers after the initial purchase. The product can be set to automatically build based on the setting on the products page. There are a few different options for building at certain times in the billing process.
 
 **Basic Functionality:**
 - Create
@@ -33,5 +33,5 @@ The WHMCS VPS module works with the WHMCS module to maintain synchronization bet
 - Activity Logs
 
 **Additionally:**
-- Supports OnApp Billing For WHMCS
+- Supports Virtuozzo Hybrid Server 9 Billing For WHMCS
 - Supports WHMCS V6 and Later
