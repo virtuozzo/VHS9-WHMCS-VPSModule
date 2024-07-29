@@ -1,0 +1,26 @@
+
+-> Attempting to upgrade a VM via configurable options can cause a VM to rebuild. This is a WHMCS bug. 
+How to fix it?
+1. Open file /templates/six/upgrade.tpl
+2. Find
+ {if $option.selected}<option value="{$option.id}" selected>{$LANG.upgradenochange}<{else}<option value="{$option.id}">{$option.nameonly} {$option.price}{/if}</option>
+3. Replace
+   {if $option.id == $configoption.selectedvalue}<option value="{$option.id}" selected>{$LANG.upgradenochange}{else}<option value="{$option.id}">{$option.nameonly} {$option.price}{/if}</option>
+
+
+How to add alert for  upgrade:
+1. Open file /templates/six/upgrade.tpl
+2. Find code
+{if $overdueinvoice}
+    {include file="$template/includes/alert.tpl" type="warning" msg=$LANG.upgradeerroroverdueinvoice}
+{elseif $existingupgradeinvoice}
+    {include file="$template/includes/alert.tpl" type="warning" msg=$LANG.upgradeexistingupgradeinvoice}
+{elseif $upgradenotavailable}
+    {include file="$template/includes/alert.tpl" type="warning" msg=$LANG.upgradeNotPossible textcenter=true}
+{/if}
+3. Under that code paste:
+{foreach key=num item=configoption from=$configoptions}
+{if $configoption.optionname=="OS Template"}
+{include file="$template/includes/alert.tpl" type="danger" msg="If you change 'OS Template' all data located on virtual machine will be lost!" textcenter=true}
+{/if}
+{/foreach}
