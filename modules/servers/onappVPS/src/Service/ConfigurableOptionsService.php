@@ -39,15 +39,16 @@ class ConfigurableOptionsService
         if($this->group == null) {
             $this->saveConfigGroup();
         }
-        
+
 
 
         $lib = new \NewOnApp_Location(null);
         $lib->setconnection($this->server);
         $groups = $lib->getLocationGroups();
+        $hasFederationSupport = $lib->hasFederationSupport();
 
-        $this->addCountries($groups, 0);
-        $this->addCities($groups, 1);
+        $this->addCountries($groups, 0, !$hasFederationSupport);
+        $this->addCities($groups, 1, !$hasFederationSupport);
         $this->addHypervisorZones(2);
         $this->addNewtworkGroup(3);
         $this->addDataZones(4);
@@ -62,9 +63,9 @@ class ConfigurableOptionsService
         $this->addAccelerator(13);
     }
 
-    private function addCountries($groups, $order)
+    private function addCountries($groups, $order, $hidden = 0)
     {
-        $this->addNewOption('country|Country', 1, $order);
+        $this->addNewOption('country|Country', 1, $order, $hidden);
 
         $sub = new ProductConfigOptionsSub();
         $alreadySavedSubs = $sub->where('configid', $this->savedOptions['country']->id)->get()->toArray();
@@ -83,9 +84,9 @@ class ConfigurableOptionsService
         }
     }
 
-    private function addCities($groups, $order)
+    private function addCities($groups, $order, $hidden = 0)
     {
-        $this->addNewOption('location_id|City', 1, $order);
+        $this->addNewOption('location_id|City', 1, $order, $hidden);
 
         $sub = new ProductConfigOptionsSub();
         $all = $sub->where('configid', $this->savedOptions['location_id']->id)->get();
@@ -94,7 +95,7 @@ class ConfigurableOptionsService
             $ex = explode("|", $item->optionname);
             $alreadySavedIds[] = $ex[0];
         }
-        
+
 
         foreach($groups as $item) {
             $group = $item['location_group'];
@@ -179,14 +180,14 @@ class ConfigurableOptionsService
 
                 $newSub = $this->addNewSub($this->savedOptions['data_store']->id, $name);
                 $this->addForAllCurrencies($newSub);
-                
+
                 $newSub = $this->addNewSub($this->savedOptions['swap_store']->id, $name);
                 $this->addForAllCurrencies($newSub);
 
             }
         }
     }
-    
+
     function array_sort_new($array, $on, $order=SORT_ASC)
     {
         $new_array = array();
@@ -237,16 +238,16 @@ class ConfigurableOptionsService
         {
             $vcentertemplates = $template->getSystemTemplatesVcenter();
         }
-        
+
         $templatestoadd = [];
- 
+
         foreach ($templates as $template) {
             $templatestoadd[] = [
                 'id' => $template['image_template']['id'],
                 'name' => $template['image_template']['label']
             ];
         }
-        
+
         if($this->product->getConfig('showvCentertemplates')) {
             foreach ($vcentertemplates as $template)
             {
@@ -256,9 +257,9 @@ class ConfigurableOptionsService
                 ];
             }
         }
-        
+
         $templatestoadd = $this->array_sort_new($templatestoadd, 'name', SORT_ASC);
-        
+
         foreach($templatestoadd as $template)
         {
             $name = $template['id'] . '|' . $template['name'];
@@ -302,7 +303,7 @@ class ConfigurableOptionsService
         $this->addNewOption('accelerator|Accelerator', 3, $order, 0, 1, 100);
         $this->addNewSub($this->savedOptions['accelerator']->id, '');
     }
-    
+
     private function addSwapUnit($order)
     {
         if($this->checkIfOptionExists('swap_disk_size')) {
@@ -421,7 +422,7 @@ class ConfigurableOptionsService
     {
         return ($this->product->getConfig($slug) == "" || $this->product->getConfig($slug) == "MB");
     }
-    
+
     private function isSetToGB($slug)
     {
         return ($this->product->getConfig($slug) == "" || $this->product->getConfig($slug) == "GB");

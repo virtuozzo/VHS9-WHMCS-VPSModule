@@ -75,7 +75,7 @@ if(basename($_SERVER["SCRIPT_FILENAME"], '.php') == 'upgrade' && $_POST['step']=
         $_REQUEST['configoption'][$temp['id']] = $temp['selectedvalue'];
         $_POST['configoption'][$temp['id']] = $temp['selectedvalue'];
     }
-    unset($_SESSION['onappvps']['configoptions']);  
+    unset($_SESSION['onappvps']['configoptions']);
 }
 
 
@@ -99,67 +99,67 @@ if (isset($_SESSION['adminid'])  && isset($_REQUEST['action'])  && isset($_REQUE
     $product     = new onappVPS_Product($_REQUEST['id']);
     $params      = $product->getParams();
     switch($_REQUEST['action']){
-        case 'save':       
+        case 'save':
             if(isset($_POST['servertype']) && $_POST['servertype']=='onappVPS'){
-                $module = PdoWrapper::fetchAssoc(PdoWrapper::query("SELECT `servertype` FROM `tblproducts` WHERE `id`=?",array($_REQUEST['id'])));                
+                $module = PdoWrapper::fetchAssoc(PdoWrapper::query("SELECT `servertype` FROM `tblproducts` WHERE `id`=?",array($_REQUEST['id'])));
                 if($module['servertype']=='onapp'){
-                    
+
                     $role = PdoWrapper::fetchAssoc(PdoWrapper::query("SELECT `configoption21` FROM `tblproducts` WHERE `id`=?",array($_REQUEST['id'])));
-                    
+
                     $role = htmlspecialchars_decode($role['configoption21']);
                     $role = json_decode($role,true);
-                    
+
                     if(isset($_POST['packageconfigoption'][3]))
                         $product->saveConfig('memory',                          (int)$_POST['packageconfigoption'][3]);
-                    
+
                     if(isset($_POST['packageconfigoption'][5]))
                         $product->saveConfig('cpus',                            (int)$_POST['packageconfigoption'][5]);
-                    
+
                     if(isset($_POST['packageconfigoption'][75]))
                         $product->saveConfig('cpu_shares',                      (int)$_POST['packageconfigoption'][7]);
-                    
+
                     if(isset($_POST['packageconfigoption'][11]))
                         $product->saveConfig('primary_disk_size',               (int)$_POST['packageconfigoption'][11]);
-                    
+
                     if(isset($_POST['packageconfigoption'][9]))
                         $product->saveConfig('swap_disk_size',                  (int)$_POST['packageconfigoption'][9]);
-                    
+
                     if(isset($_POST['packageconfigoption'][18]))
                         $product->saveConfig('ip_addresses',                    (int)$_POST['packageconfigoption'][18]);
-                    
+
                     if(isset($_POST['ds_zones_primary']))
                         $product->saveConfig('data_store_group_primary_id',     (int)$_POST['ds_zones_primary']);
-                    
+
                     if(isset($_POST['ds_zones_swap']))
                         $product->saveConfig('data_store_group_swap_id',        (int)$_POST['ds_zones_swap']);
-                    
+
                     if(isset($_POST['billing_plan']))
                         $product->saveConfig('user_billing_plan',               (int)$_POST['billing_plan']);
-                    
+
                     if(isset($_POST['hvzones']))
                         $product->saveConfig('hypervisor_zone',                 (int)$_POST['hvzones']);
-                    
+
                     if(isset($_POST['packageconfigoption'][4]))
                         $product->saveConfig('hypervisor_id',                   (int)$_POST['packageconfigoption'][4]);
-                    
+
                     if(isset($_POST['role_ids']))
                         $product->saveConfig('user_role',                       json_encode($role['role_ids']));
-                    
+
                     if(isset($_POST['user_group']))
                         $product->saveConfig('user_group',                      $_POST['user_group']);
-                    
+
                     if(isset($_POST['packageconfigoption'][6]))
                         $product->saveConfig('primary_network_id',              $_POST['packageconfigoption'][6]);
-                    
+
                     if(isset($_POST['packageconfigoption'][8]))
                         $product->saveConfig('rate_limit',                      $_POST['packageconfigoption'][8]);
-                    
+
                     if(isset($_POST['autobackups']))
-                        $product->saveConfig('required_automatic_backup',       (isset($_POST['autobackups']) ? 1 : '')); 
+                        $product->saveConfig('required_automatic_backup',       (isset($_POST['autobackups']) ? 1 : ''));
                 }
-                
+
             }
-            
+
             break;
         case 'gethypervisors':
             if(isset($_POST['zone']) && $_POST['zone'] > 0)
@@ -203,7 +203,7 @@ if (isset($_SESSION['adminid'])  && isset($_REQUEST['action'])  && isset($_REQUE
             }
             die();
             break;
-        case 'onappVPS_setup_custom_fields':   
+        case 'onappVPS_setup_custom_fields':
             if(onapp_customFieldExists($_POST['productid'],'hostname') || onapp_customFieldExists($_POST['productid'],'vmid') || onapp_customFieldExists($_POST['productid'],'userid')){
                        die(json_encode(array("success" => 0, "result" => 'Product has already custom fields assigned.')));
             }
@@ -212,7 +212,7 @@ if (isset($_SESSION['adminid'])  && isset($_REQUEST['action'])  && isset($_REQUE
             }
             break;
         case 'onappVPS_synchronize_templates':
-            
+
 
             if($_POST['replace']==1)
                 $replace = true;
@@ -222,14 +222,14 @@ if (isset($_SESSION['adminid'])  && isset($_REQUEST['action'])  && isset($_REQUE
             $federated = new \OnAppVps\OnApp\OnAppFederated($params, $product->id);
             $federated->synchronize();
             die($result );
-            
+
         break;
         default:
             die();
         break;
-        
+
     }
-   
+
 }
 
 if (isset($_SESSION['adminid']) && isset($_POST['servertype']) && $_POST['servertype'] == 'onappVPS' && isset($_POST['customconfigoption']) && isset($_REQUEST['id'])){
@@ -247,7 +247,7 @@ if (isset($_SESSION['adminid']) && isset($_POST['servertype']) && $_POST['server
 
 
 if(!function_exists('hide_pass_in_clientarea')){
-    function hide_pass_in_clientarea ($vars){   
+    function hide_pass_in_clientarea ($vars){
         //hide pass in client area
         if(!empty($vars['pid'])){
             include_once ROOTDIR . DS . 'includes' . DS . 'onappWrapper' . DS . 'utility.php';
@@ -263,26 +263,26 @@ if(!function_exists('hide_pass_in_clientarea')){
                 }
             }
         }
- 
+
         if($vars['filename']=="clientarea" && $_GET['action']=="productdetails" && $vars['configurableoptions']){
-    
+
             //Federated support
             $isFederated = false;
             $federateGroup = null;
-            foreach($vars['configurableoptions'] as $key=>$value){  
+            foreach($vars['configurableoptions'] as $key=>$value){
                 if($value['optionname']=="City"){
                     $query = PdoWrapper::query("SELECT `federated`, `location_id`  FROM `onappVPS_LocationGroups` WHERE `city`=?", array($value['selectedoption']));
                     $row = PdoWrapper::fetchAssoc($query);
                     $isFederated = isset($row['federated']) && $row['federated']=="1";
                     $federateGroup = $row['location_id'];
-                    break;   
+                    break;
                 }
             }
             $toRemove = array("Country","City","Hypervisor Zone","Network Group","Primary Data Store","Swap Data Store");
             if($isFederated){
-                foreach($vars['configurableoptions'] as $key=>$value){  
+                foreach($vars['configurableoptions'] as $key=>$value){
                     if(in_array($value['optionname'],  $toRemove)){
-                      unset($vars['configurableoptions'][$key]); 
+                      unset($vars['configurableoptions'][$key]);
                     }
                 }
             }
@@ -290,15 +290,15 @@ if(!function_exists('hide_pass_in_clientarea')){
             if(method_exists ( $smarty,'assign')){
                 $smarty->assign('configurableoptions', $vars['configurableoptions']);
             }
-            
+
         }
     }
 }
 
 if(!function_exists('remove_configoptions_from_upgrade')){
-    function remove_configoptions_from_upgrade ($vars){    
-       
-        
+    function remove_configoptions_from_upgrade ($vars){
+
+
         if($vars['filename']!="upgrade")
             return;
 
@@ -311,25 +311,25 @@ if(!function_exists('remove_configoptions_from_upgrade')){
         }
         if(empty($tplVars))
             return;
-        
+
         include_once ROOTDIR . DS . 'includes' . DS . 'onappWrapper' . DS . 'utility.php';
         onapp_loadCLass();
-        
+
         if(PdoWrapper::numRows(PdoWrapper::query("SELECT h.id FROM tblhosting h JOIN tblproducts p ON(h.packageid = p.id) WHERE h.id=? AND p.servertype='onappVPS'",array($tplVars['id'])))==0)
                 return;
         //primary
-        foreach($tplVars['configoptions'] as $key=>$value){  
+        foreach($tplVars['configoptions'] as $key=>$value){
             $fieldname = PdoWrapper::fetchAssoc(PdoWrapper::query("SELECT count(id) AS count FROM  `tblproductconfigoptions` WHERE `id`=? AND `optionname` LIKE 'primary_disk_size|%'",array($value['id'])));
             if($fieldname['count']>0){
                 $ids = array();
-                
+
                 $selected      = PdoWrapper::fetchAssoc(PdoWrapper::query("SELECT id,optionname FROM  `tblproductconfigoptionssub` WHERE `id` = ?",array($value['selectedvalue'])));
                 $selected_disk = explode('|',$selected['optionname']);
                 if($selected_disk[0]>0)
                    $selected = $selected_disk[0];
                 else
                    $selected = $selected['optionname'];
-                
+
                 foreach($value['options'] as $k =>$val){
                     $ids[]= (int)$val['id'];
                 }
@@ -343,7 +343,7 @@ if(!function_exists('remove_configoptions_from_upgrade')){
                             $new_value = $disk[0];
                         else
                             $new_value = $r['optionname'];
-                      
+
                         if($selected>$new_value){
                             $remove[]  = $r['id'];
                         }
@@ -351,22 +351,22 @@ if(!function_exists('remove_configoptions_from_upgrade')){
                 foreach($value['options'] as $k =>$val){
                         if(in_array($val['id'],$remove)){
                         unset($tplVars['configoptions'][$key]['options'][$k]);}
-                }  
+                }
 
                 if(count($tplVars['configoptions'][$key]['options'])==0 || strpos(strtolower($os),  strtolower('FreeBSD')>0)){
                         unset($tplVars['configoptions'][$key]);
                 }
-             
+
             }
         }
-        
+
          //swap
-        foreach($tplVars['configoptions'] as $key=>$value){  
+        foreach($tplVars['configoptions'] as $key=>$value){
             //unset($tplVars['configoptions'][$key]);
             $fieldname = PdoWrapper::fetchAssoc(PdoWrapper::query("SELECT count(id) AS count FROM  `tblproductconfigoptions` WHERE `id`=? AND `optionname` LIKE 'swap_disk_size|%'",array($value['id'])));
             if($fieldname['count']>0){
                 $ids = null;
-                
+
                 $selected       = PdoWrapper::fetchAssoc(PdoWrapper::query("SELECT id,optionname FROM  `tblproductconfigoptionssub` WHERE `id` = ?",array($value['selectedvalue'])));
                 $selected_disk  = explode('|',$selected['optionname']);
                 if($selected_disk[0]>0)
@@ -376,7 +376,7 @@ if(!function_exists('remove_configoptions_from_upgrade')){
                 foreach($value['options'] as $k =>$val){
                     $ids .=$val['id'].",";
                 }
-                
+
                 $ip_values = PdoWrapper::query("SELECT id,optionname FROM  `tblproductconfigoptionssub` WHERE `id` IN (".addslashes(substr($ids,0,-1)).")");
                 $remove = array();
                 while($r = PdoWrapper::fetchAssoc($ip_values)){
@@ -393,39 +393,39 @@ if(!function_exists('remove_configoptions_from_upgrade')){
                 foreach($value['options'] as $k =>$val){
                         if(in_array($val['id'],$remove)){
                         unset($tplVars['configoptions'][$key]['options'][$k]);}
-                }  
+                }
 
                 if(count($tplVars['configoptions'][$key]['options'])==0 ){
                         unset($tplVars['configoptions'][$key]);
                 }
-             
+
             }
         }
-        
-        
-        
+
+
+
         //Federated support
         $isFederated = false;
         $federateGroup = null;
-        foreach($tplVars['configoptions'] as $key=>$value){  
+        foreach($tplVars['configoptions'] as $key=>$value){
             if($value['optionname']=="City"){
                 $query = PdoWrapper::query("SELECT `federated`, `location_id`  FROM `onappVPS_LocationGroups` WHERE `city`=?", array($value['selectedoption']));
                 $row = PdoWrapper::fetchAssoc($query);
                 $isFederated = isset($row['federated']) && $row['federated']=="1";
                 $federateGroup = $row['location_id'];
-                break;   
+                break;
             }
         }
         $toRemove = array("Country","City","Hypervisor Zone","Network Group","Primary Data Store","Swap Data Store");
-        
+
         if($isFederated){
              $_SESSION['onappvps']['configoptions'] = array();
-            foreach($tplVars['configoptions'] as $key=>$value){  
+            foreach($tplVars['configoptions'] as $key=>$value){
                 if(in_array($value['optionname'],  $toRemove)){
                   $_SESSION['onappvps']['configoptions'][$key]=$tplVars['configoptions'][$key];
-                  unset($tplVars['configoptions'][$key]); 
+                  unset($tplVars['configoptions'][$key]);
                 }
-                
+
                 if($value['optionname']=="OS Template" && $federateGroup){
                     foreach($value['options'] as $k2  => $v2){
                         $template = PdoWrapper::query("SELECT optionname FROM tblproductconfigoptionssub WHERE id=?", array( $v2['id']));
@@ -437,17 +437,17 @@ if(!function_exists('remove_configoptions_from_upgrade')){
                         if($count['count']=="0"){
                            unset($tplVars['configoptions'][$key]['options'][$k2]);
                         }
-                        
+
                     }
                 }
             }
         }
- 
+
         if(method_exists ( $smarty,'assign')){
             $smarty->assign('configoptions', $tplVars['configoptions']);
         }
         unset($tplVars);
-     
+
     }
 }
 
@@ -464,43 +464,62 @@ add_hook('ClientAreaHeaderOutput', 999999, function($vars) {
 
         $result = PdoWrapper::query("SELECT * FROM `tblproducts` WHERE `id` = ? LIMIT 1", array($pid));
         $row = PdoWrapper::fetchAssoc($result);
-        
+
         if($row['servertype'] == 'onappVPS' && isset($vars['configurableoptions']) && !empty($vars['configurableoptions']))
         {
-            
+
             $templates = array();
             $accelerator = array();
             $hypervisorZone = array();
-            
+            $memoryOption = array();
+            $diskOption = array();
+
             foreach($vars['configurableoptions'] as $configurable)
             {
                 if($configurable['optionname'] == 'OS Template')
                 {
                     $templates = $configurable;
                 }
-                if($configurable['optionname'] == 'Accelerator')
+                else if($configurable['optionname'] == 'Accelerator')
                 {
                     $accelerator = $configurable;
                 }
-                if($configurable['optionname'] == 'Hypervisor Zone')
+                else if($configurable['optionname'] == 'Hypervisor Zone')
                 {
                     $hypervisorZone = $configurable;
                 }
+                else if($configurable['optionname'] == 'Memory')
+                {
+                    $memoryOption = $configurable;
+                }
+                else if($configurable['optionname'] == 'Primary Disk Size')
+                {
+                    $diskOption = $configurable;
+                }
             }
-            
+
             $product = new onappVPS_Product($pid);
             $accelerator_config = $product->getConfig('accelerator');
-            
+
+            $hpvZoneAPI = new NewOnApp_HypervisorZone(null);
+            $templateAPI = new NewOnApp_Template(null);
+
+            $params = $product->getParams();
+
+            $templateAPI->setconnection($params);
+            $hpvZoneAPI->setconnection($params);
+            $hasFederationSupport = $templateAPI->hasFederationSupport();
+
             $fieldid = $templates['id'];
             $removeValues = '';
             $templatesOption = $templates['options'];
-            
+
             $allowTemplateJSON = [];
             $allowTemplateJSON['removeOptions'] = [];
-            
+
             foreach($templatesOption as $template)
             {
-                if(!isset($config['federated_'.$template['required']]) || $config['federated_'.$template['required']] != '1')
+                if($hasFederationSupport && (!isset($config['federated_'.$template['required']]) || $config['federated_'.$template['required']] != '1'))
                 {
                     $removeValues.= <<< JS
                         $('select[name="configoption[{$fieldid}]"]').find('option[value={$template['id']}]').remove();
@@ -514,15 +533,15 @@ JS;
 JS;
                 }
             }
-            
+
             $allowTemplate = '';
             $hypervisorZoneSelectedID = $hypervisorZone['selectedvalue'];
-            
+
             if($_GET['ajax_hpvZone'])
             {
                 $hypervisorZoneSelectedID = $_GET['ajax_hpvZone'];
             }
-            
+
             $activeHpvZone = [];
             foreach($hypervisorZone['options'] as $hpvZoneOption)
             {
@@ -532,18 +551,9 @@ JS;
                 }
             }
 
-            
-            $hpvZoneAPI       = new NewOnApp_HypervisorZone(null);
-            $templateAPI      = new NewOnApp_Template(null);
-
-            $params      = $product->getParams();
-
-            $templateAPI->setconnection($params);
-            $hpvZoneAPI->setconnection($params);
-            
             $allTemplates = [];
             $allHypervisorZones = [];
-            
+
 
             $templatesAPI = $templateAPI->getSystemTemplates();
             $hypervisor_zonesAPI = $hpvZoneAPI->getZones();
@@ -563,34 +573,77 @@ JS;
                     $allTemplates[$templateData['vcenter_image_template']['id']] = $templateData['vcenter_image_template'];
                 }
             }
-            
+
             $allowTemplateJSON['fieldid'] = $fieldid;
             $federation_id = $allHypervisorZones[$activeHpvZone['required']]['federation_id'];
+            $templateMinValuesJSON = [];
+
             foreach($templatesOption as $templateData)
             {
-                $remote_id = $allTemplates[$templateData['required']]['remote_id'];
-                if($remote_id == $federation_id)
-                {
-                    $allowTemplate .= "$('select[name=\"configoption[{$fieldid}]\"]').append('<option value=\"{$templateData['id']}\">{$templateData['name']}</option>');";
-                    $allowTemplateJSON['options'][] = ['id' => $templateData['id'], 'name' => $templateData['name']];
-                } 
-                elseif (strpos($remote_id, $federation_id) !== false) 
-                {
+                $remoteTemplateInfo = $allTemplates[$templateData['required']];
+
+                if (isset($remoteTemplateInfo)) {
+                    $templateMinValuesJSON[$templateData['id']] = [];
+                    $templateMinValuesJSON[$templateData['id']]['min_disk_size'] = $remoteTemplateInfo['min_disk_size'];
+                    $templateMinValuesJSON[$templateData['id']]['min_memory_size'] = $remoteTemplateInfo['min_memory_size'];
+                }
+
+                if ($hasFederationSupport) {
+                    $remote_id = $remoteTemplateInfo['remote_id'];
+
+                    if ($remote_id == $federation_id) {
+                        $allowTemplate .= "$('select[name=\"configoption[{$fieldid}]\"]').append('<option value=\"{$templateData['id']}\">{$templateData['name']}</option>');";
+                        $allowTemplateJSON['options'][] = ['id' => $templateData['id'], 'name' => $templateData['name']];
+                    } elseif (strpos($remote_id, $federation_id) !== false) {
+                        $allowTemplate .= "$('select[name=\"configoption[{$fieldid}]\"]').append('<option value=\"{$templateData['id']}\">{$templateData['name']}</option>');";
+                        $allowTemplateJSON['options'][] = ['id' => $templateData['id'], 'name' => $templateData['name']];
+                    }
+                } else {
                     $allowTemplate .= "$('select[name=\"configoption[{$fieldid}]\"]').append('<option value=\"{$templateData['id']}\">{$templateData['name']}</option>');";
                     $allowTemplateJSON['options'][] = ['id' => $templateData['id'], 'name' => $templateData['name']];
                 }
             }
-            
+
             if($_GET['ajax_hpvZone'])
             {
                 die(json_encode($allowTemplateJSON));
             }
 
+            $templateMinValuesJSON = json_encode($templateMinValuesJSON);
+
             $customjs = <<< JS
                 <script>
                     $(document).ready(function(){
-                    
-                        $('body').on('change', '#inputConfigOption{$hypervisorZone['id']}', function(){
+                        var templateMinValues = JSON.parse('{$templateMinValuesJSON}');
+                        
+                        function setMinValue(el, minValue) {
+                            if (el) {
+                                var currentValue = parseInt(el.val(), 10);
+                                
+                                el.data("ionRangeSlider").update({
+                                    min: minValue,
+                                    from: Math.max(currentValue, minValue) 
+                                });    
+                            }
+                        }
+                        
+                        function applyMinTemplateValues(templateId) {
+                            var minValues = templateMinValues[templateId] || {};
+                            
+                            if (typeof minValues.min_memory_size !== 'undefined') {
+                                setMinValue(jQuery("#inputConfigOption{$memoryOption['id']}"), minValues.min_memory_size);
+                            }
+                            
+                            if (typeof minValues.min_disk_size !== 'undefined') {
+                                setMinValue(jQuery("#inputConfigOption{$diskOption['id']}"), minValues.min_disk_size);
+                            }
+                        }
+                        
+                        $('body').on('change', '#inputConfigOption{$templates['id']}', function () {
+                            applyMinTemplateValues(this.value);
+                        });
+                                                
+                        $('body').on('change', '#inputConfigOption{$hypervisorZone['id']}', function() {
                             
                             $.ajax({
                                 data : { ajax_hpvZone : $(this).val() },
@@ -620,16 +673,18 @@ JS;
                             });
                         
                         });
-                                    
+                        
                         $('select[name="configoption[{$fieldid}]"] option').remove();
                         {$allowTemplate}
                         {$removeValues}
+                        
+                        applyMinTemplateValues($('select[name="configoption[{$templates['id']}]"]').val());
                     });
                 </script>
 JS;
-        
+
             return $customjs;
         }
-        
+
     }
 });

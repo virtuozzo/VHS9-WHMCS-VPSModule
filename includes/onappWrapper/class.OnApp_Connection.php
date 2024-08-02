@@ -12,7 +12,7 @@ class NewOnApp_Connection
      * @var NewOnApp_WrapperAPI
      */
     protected $_api;
-    
+
     private $apiVersion;
 
     public function setconnection($params, $user = false)
@@ -22,18 +22,18 @@ class NewOnApp_Connection
         if (!$user)
             $this->_api = new NewOnApp_WrapperAPI(NewOnApp_WrapperAPI::getHostname($params), $params['serverusername'], $params['serverpassword']);
         else {
-     
+
             $this->_api = new NewOnApp_WrapperAPI(NewOnApp_WrapperAPI::getHostname($params), trim($params['username']), trim(htmlspecialchars_decode($params['password'])));
-         
+
             }
     }
-    
+
     public function setapi(NewOnApp_WrapperAPI $api)
     {
-       
+
         $this->_api = $api;
     }
-    
+
     /**
      * Get API
      *
@@ -43,7 +43,7 @@ class NewOnApp_Connection
     {
         return $this->_api;
     }
-    
+
     public function setDetails($auth)
     {
         $this->_api = new NewOnApp_WrapperAPI($this->_api->getHost(), $auth['email'], $auth['key']);
@@ -57,7 +57,7 @@ class NewOnApp_Connection
         else
             return false;
     }
-    
+
     public function error()
     {
         if ($this->_api->getError())
@@ -65,7 +65,7 @@ class NewOnApp_Connection
         else
             return false;
     }
-    
+
     public function lb_error()
     {
         $response = $this->_api->getResponse();
@@ -78,19 +78,19 @@ class NewOnApp_Connection
     {
         return $this->_api->getResponse();
     }
-    
+
     public function getHostname($params)
     {
         return NewOnApp_WrapperAPI::getHostname($params);
     }
-    
+
     public function setTimeOut($timeout)
     {
         if (!$timeout)
                 return false;
           $this->_api->setTimeout((int)$timeout);
     }
-    
+
     public function getVersion()
     {
         if(!is_null($this->apiVersion)){
@@ -101,6 +101,18 @@ class NewOnApp_Connection
             $res['version'] = preg_replace('/\-(.*)/', '', $res['version']);
         }
         return $this->apiVersion = $res['version'];
+    }
+
+    public function hasFederationSupport()
+    {
+        $version = $this->getVersion();
+        $version = preg_replace("/[^0-9.]/", "", $version);
+
+        if ($version && version_compare($version, "7.1", '<')) {
+            return true;
+        }
+
+        return false;
     }
 }
 
