@@ -478,6 +478,8 @@ function onappVPS_CreateAccount($params, $double = false)
         }
 
         $network_id = isset($params['configoptions']['network_group']) ? $params['configoptions']['network_group'] : $product->getConfig('primary_network_id');
+	$primary_ds_id = isset($params['configoptions']['data_store']) ? $params['configoptions']['data_store'] : $product->getConfig('data_store_group_primary_id');
+	$swap_ds_id = isset($params['configoptions']['swap_store']) ? $params['configoptions']['swap_store'] : $product->getConfig('data_store_group_swap_id');
 
         $templateID      = (isset($params['configoptions']['template_id']) ? $params['configoptions']['template_id'] : $product->getConfig('template_id'));
         //create VM
@@ -504,10 +506,15 @@ function onappVPS_CreateAccount($params, $double = false)
                 'initial_root_password_confirmation' => $vm_pass,
                 'required_automatic_backup'          => $product->getConfig('required_automatic_backup'),
                 'primary_disk_min_iops'              => $product->getConfig('primary_disk_min_iops'),
-                'swap_disk_min_iops'                 => $product->getConfig('swap_disk_min_iops')
+                'swap_disk_min_iops'                 => $product->getConfig('swap_disk_min_iops'),
+		'primary_network_group_id'           => $network_id,
+		'data_store_group_primary_id'        => $primary_ds_id,
+		'data_store_group_swap_id'           => $swap_ds_id
             ],
         ];
-        
+
+# This code block would only set network and datastore zones if specified as a configuration option in WHMCS. 
+/*    
         if(isset($params['configoptions']['network_group']) && !empty($params['configoptions']['network_group']))
         {
             $virtual_machine['primary_network_group_id'] = $params['configoptions']['network_group'];
@@ -520,7 +527,8 @@ function onappVPS_CreateAccount($params, $double = false)
         {
             $virtual_machine['data_store_group_swap_id'] = $params['configoptions']['swap_store'];
         }
-
+*/
+	    
         if($product->getConfig('showvCentertemplates'))
         {
             unset($virtual_machine['virtual_machine']['hypervisor_group_id']);
